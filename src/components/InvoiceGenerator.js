@@ -118,7 +118,7 @@ const formatDateForDisplay = () => {
 
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
 
-      const fileName = billTo.name ? `${billTo.name.replace(/\s+/g, "_")}_Invoice.pdf` : "invoice.pdf";
+      const fileName = billTo.name ? `${billTo.name.replace(/\s+/g, "_")}_Zles_Invoice.pdf` : "invoice.pdf";
       pdf.save(fileName);
     });
   };
