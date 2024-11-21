@@ -10,7 +10,6 @@ const InvoiceGenerator = () => {
   const [items, setItems] = useState([{ name: "", description: "", qty: 1, price: 0 }]);
   const [billTo, setBillTo] = useState({ name: "" });
   const [errors, setErrors] = useState({ name: false });
-  const [serial, setSerial] = useState(1); // Serial number for Customer ID
   const [taxRate, setTaxRate] = useState(0);
   const [discountRate, setDiscountRate] = useState(0);
 
@@ -43,8 +42,9 @@ const InvoiceGenerator = () => {
   const calculateDiscount = () => (calculateSubtotal() * discountRate) / 100;
 
   const calculateTotal = () => calculateSubtotal() + calculateTax() - calculateDiscount();
-  // Format date for Invoice Number: ddmmyy
-const formatDateForInvoice = () => {
+
+
+  const formatDateForInvoice = () => {
   const now = new Date();
   const day = String(now.getDate()).padStart(2, "0");
   const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
@@ -108,20 +108,24 @@ const formatDateForDisplay = () => {
 
   const downloadPDF = () => {
     if (!validateInputs()) return;
-
+  
     const content = document.getElementById("invoice-content");
-    html2canvas(content, { scale: 2 }).then((canvas) => {
+    
+    html2canvas(content, { scale: 2, scrollY: -window.scrollY }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
+  
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-      const fileName = billTo.name ? `${billTo.name.replace(/\s+/g, "_")}_Zles_Invoice.pdf` : "invoice.pdf";
+  
+      const fileName = billTo.name
+        ? `${billTo.name.replace(/\s+/g, "_")}_Zles_Invoice.pdf`
+        : "invoice.pdf";
       pdf.save(fileName);
     });
   };
+  
 
   const generateCustomerID = () => {
     const invoiceNumber = generateInvoiceNumber();
@@ -208,7 +212,7 @@ const formatDateForDisplay = () => {
 
     {/* Items Section */}
     <h5>Items:</h5>
-    <table className="table table-bordered">
+    <table className="table table-bordered table-responsive">
       <thead>
         <tr>
           <th>Quantity</th>
