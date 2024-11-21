@@ -106,25 +106,45 @@ const formatDateForDisplay = () => {
     return parts.join(", ");
   };
 
-  const downloadPDF = () => {
-    if (!validateInputs()) return;
-  
-    const content = document.getElementById("invoice-content");
+
+
+const downloadPDF = () => {
+  if (!validateInputs()) return;
+
+  const content = document.getElementById("invoice-content");
+
+ // Force content to A4 dimensions
+ content.style.width = "210mm"; // A4 width
+ content.style.height = "auto"; // Let content determine height
+ content.style.maxWidth = "none"; 
+
+  html2canvas(content, {
+    scale: window.devicePixelRatio > 1 ? 3 : 2,  
+    scrollY: -window.scrollY, 
+    width: content.offsetWidth, 
+  }).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgWidth = 210; // A4 width in mm
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    // Add image to PDF
+    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+
+    // Generate dynamic file name based on billTo.name
+    const fileName = billTo.name
+      ? `${billTo.name.replace(/\s+/g, "_")}_Zles_Invoice.pdf`
+      : "invoice.pdf";
+      
+    pdf.save(fileName); // Download the PDF
+
+    content.style.width = "";
+    content.style.maxWidth = "";
+    content.style.height = "";
     
-    html2canvas(content, { scale: 2, scrollY: -window.scrollY }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
-      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-  
-      const fileName = billTo.name
-        ? `${billTo.name.replace(/\s+/g, "_")}_Zles_Invoice.pdf`
-        : "invoice.pdf";
-      pdf.save(fileName);
-    });
-  };
+  });
+};
+
   
 
   const generateCustomerID = () => {

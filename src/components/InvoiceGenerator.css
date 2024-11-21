@@ -24,7 +24,7 @@
 
 
 .table {
-  margin-top: 20px;
+  margin-top: 10mm;
   width: 100%;
   border-collapse: collapse;
 }
@@ -32,8 +32,9 @@
 .table th,
 .table td {
   border: 1px solid #ddd;
-  padding: 8px;
+  padding: 10px;
   text-align: center;
+  font-size: 12px; /* Adjust font size for A4 */
 }
 
 .table th {
@@ -60,7 +61,9 @@
   margin-bottom: 20px;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* Ensure horizontal scrolling */
+  overflow-x: auto; /* Ensure horizontal scrolling on small screens */
+  width: 100%; /* Make the invoice content fit within the screen width */
+  max-width: 800px; /* Limit the maximum width */
 }
 
 .table-responsive {
@@ -69,9 +72,9 @@
 
 .invoice-footer {
   border-top: 2px solid #000;
-  margin-top: 20px;
-  padding-top: 10px;
-  font-size: 14px;
+  margin-top: 10mm;
+  padding-top: 5mm;
+  font-size: 12px;
   text-align: center;
 }
 
@@ -161,19 +164,105 @@
 .button-group i {
   font-size: 18px;
 }
-
 @media (max-width: 768px) {
   #invoice-header,
   .bill-to {
     flex-direction: column;
-    align-items: start;
+    align-items: flex-start;
+  }
+
+  #invoice-header .text-start,
+  #invoice-header .text-end {
+    width: 100%; /* Ensure full width on small screens */
+    text-align: left; /* Align text for better readability */
   }
 
   .bill-to .row {
     flex-direction: column;
   }
 
-  table {
-    font-size: 0.8em;
+  .table th,
+  .table td {
+    font-size: 12px; /* Reduce font size for smaller screens */
+    padding: 6px; /* Reduce padding for smaller screens */
+  }
+
+  #invoice-content {
+    padding: 10px; /* Reduce padding for small screens */
+    margin: 10px auto; /* Center content with smaller margins */
+    max-width: 100%; /* Ensure it fits within the viewport */
+  }
+
+  .text-end {
+    text-align: left; /* Align text left on smaller screens */
+  }
+}
+
+@media (max-width: 576px) {
+  #invoice-header img {
+    max-height: 30px; /* Reduce logo size */
+  }
+
+  #invoice-header p,
+  .bill-to label,
+  .bill-to p {
+    font-size: 10px; /* Reduce font size for ultra-small screens */
+  }
+
+  .table {
+    font-size: 10px; /* Adjust table font size */
+  }
+
+  .text-end {
+    text-align: center; /* Center align on very small screens */
+  }
+}
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    width: 210mm; /* A4 width */
+    height: 297mm; /* A4 height */
+    overflow: hidden; /* Prevent scrolling in print */
+  }
+
+  #invoice-content {
+    padding: 20px;
+    background-color: #fff;
+    width: 100%;
+    max-width: 210mm; /* A4 max width */
+    box-shadow: none; /* Remove shadows for print */
+    border: none;
+    margin: 0 auto; /* Center the content */
+    page-break-inside: avoid; /* Prevent page breaks inside content */
+  }
+
+  .table {
+    width: 100%; /* Ensure table takes the full width */
+    border-collapse: collapse;
+    font-size: 12px; /* Set font size for print readability */
+  }
+
+  .table th,
+  .table td {
+    border: 1px solid #000; /* Add borders for clarity */
+    padding: 8px; /* Adjust padding */
+  }
+
+  .text-end {
+    text-align: right;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  #invoice-header img {
+    max-height: 50px; /* Adjust logo size for print */
+  }
+
+  /* Hide elements not needed for printing */
+  .no-print {
+    display: none !important;
   }
 }
